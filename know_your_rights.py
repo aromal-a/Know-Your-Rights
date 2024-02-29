@@ -1,14 +1,14 @@
 from transformers import GPT2LMHeadModel, GPT2Tokenizer
 
-# Load pre-trained GPT-2 model and tokenizer
+
 model_name = "gpt2"
 model = GPT2LMHeadModel.from_pretrained(model_name)
 tokenizer = GPT2Tokenizer.from_pretrained(model_name)
 
-# Set the pad_token for the tokenizer
+
 tokenizer.pad_token = tokenizer.eos_token
 
-# Define a hypothetical legal dataset with keywords
+
 legal_data = [
     {"keywords": ["name", "territory", "Union"], "issue": "Name and territory of the Union", "solution": "India, that is Bharat, shall be a Union of States."},
     {"keywords": ["admission", "establishment", "new States"], "issue": "Admission or establishment of new States", "solution": "Parliament may by law admit into the Union, or establish, new States on such terms and conditions as it thinks fit."},
@@ -37,19 +37,19 @@ legal_data = [
     }
 ]
 
-# Function to generate legal solutions
+
 def generate_legal_solution(input_text):
-    # Lowercase the input for case-insensitive matching
+    
     input_text_lower = input_text.lower()
 
-    # Search the dataset for matching keywords
+  
     matching_entries = [item for item in legal_data if any(keyword.lower() in input_text_lower for keyword in item["keywords"])]
 
     if matching_entries:
-        # Select the first matching entry for simplicity
+       
         dataset_entry = matching_entries[0]
 
-        # Generate output
+     
         output = model.generate(tokenizer.encode(dataset_entry["issue"], return_tensors="pt", padding=True, truncation=True),
                                 max_length=200, num_return_sequences=1, no_repeat_ngram_size=2)
         generated_solution = tokenizer.decode(output[0], skip_special_tokens=True)
@@ -57,7 +57,7 @@ def generate_legal_solution(input_text):
     else:
         return "No legal solution found for the provided input."
 
-# Example usage
+
 input_text = ""
 legal_solution = generate_legal_solution(input_text)
 
